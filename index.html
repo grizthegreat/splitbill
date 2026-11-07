@@ -1,305 +1,598 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
   <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Split Bill Modern</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-          <style>
-              :root {
-                      --primary: #7e22ce;
-                            --secondary: #9333ea;
-                                  --bg-gradient: linear-gradient(135deg, #f5d0fe, #c084fc);
-                                        --text-color: #1e1b4b;
-                                              --card-bg: rgba(255, 255, 255, 0.95);
-                                                    --error-color: #dc2626;
-                                                          --error-bg: #fef2f2;
-              }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Split Bill Modern - Hitung Patungan Cepat & Akurat</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Custom Glassmorphism & Micro-animations */
+    body {
+      background: radial-gradient(circle at 10% 20%, rgba(216, 180, 254, 0.4) 0%, rgba(192, 132, 252, 0.1) 90.1%),
+                  linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 50%, #fae8ff 100%);
+      background-attachment: fixed;
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+    
+    .input-focus-ring:focus {
+      outline: none;
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+    }
 
-                  * {
-                          box-sizing: border-box;
-                                margin: 0;
-                                      padding: 0;
-                  }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #c4b5fd;
+      border-radius: 8px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #a78bfa;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 antialiased py-6 px-4 sm:px-6 lg:px-8 flex flex-col justify-between">
 
-                      body {
-                              font-family: 'Inter', sans-serif;
-                                    background: var(--bg-gradient);
-                                          color: var(--text-color);
-                                                display: flex;
-                                                      justify-content: center;
-                                                            align-items: center;
-                                                                  min-height: 100vh;
-                                                                        padding: 2rem;
-                      }
+  <!-- Header Section -->
+  <header class="max-w-4xl mx-auto w-full text-center mb-8 mt-2">
+    <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur px-4 py-1.5 rounded-full text-brand-700 text-xs sm:text-sm font-semibold shadow-sm border border-brand-200/60 mb-3">
+      <span class="flex h-2 w-2 rounded-full bg-brand-500 animate-pulse"></span>
+      Akurat • Praktis • Siap Kirim WhatsApp
+    </div>
+    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900 mb-2">
+      <span class="bg-gradient-to-r from-brand-700 via-purple-600 to-pink-600 bg-clip-text text-transparent">Split Bill</span> Modern 💸
+    </h1>
+    <p class="text-slate-600 text-sm sm:text-base max-w-md mx-auto">
+      Hitung pembagian bill pesanan, diskon persen, diskon nominal, dan ongkir/pajak secara proporsional.
+    </p>
+  </header>
 
-                          .card {
-                                  background: var(--card-bg);
-                                        border-radius: 1.5rem;
-                                              padding: 2.5rem;
-                                                    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
-                                                          max-width: 600px;
-                                                                width: 100%;
-                          }
+  <!-- Main Content Layout -->
+  <main class="max-w-4xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+    
+    <!-- LEFT PANEL: Form Inputs -->
+    <section class="lg:col-span-6 glass-card rounded-3xl p-5 sm:p-7 shadow-xl shadow-purple-900/5">
+      <div class="flex items-center justify-between mb-5 pb-3 border-b border-slate-200/80">
+        <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+          </svg>
+          Input Data Rincian
+        </h2>
+        <button id="btnContoh" type="button" class="text-xs font-semibold text-brand-700 hover:text-brand-900 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg transition-colors border border-brand-200">
+          ✨ Isi Contoh
+        </button>
+      </div>
 
-                              .form-section {
-                                      display: flex;
-                                            flex-direction: column;
-                                                  gap: 1rem;
-                              }
+      <form id="splitForm" class="space-y-4" onsubmit="event.preventDefault(); hitungSplitBill();">
+        
+        <!-- Textarea Menu Input -->
+        <div>
+          <div class="flex justify-between items-center mb-1.5">
+            <label for="menuPerOrang" class="text-xs sm:text-sm font-bold text-slate-700">
+              Daftar Pesanan per Orang <span class="text-rose-500">*</span>
+            </label>
+            <span class="text-[11px] text-slate-500 bg-slate-100 px-2 py-0.5 rounded">Format: Nama=Harga</span>
+          </div>
+          <textarea 
+            id="menuPerOrang" 
+            rows="5" 
+            class="w-full text-sm p-3.5 rounded-xl border border-slate-300 bg-white/90 text-slate-900 placeholder:text-slate-400 input-focus-ring font-mono transition"
+            placeholder="Yunus=50000&#10;Sciros=60000&#10;Budi=45000"></textarea>
+        </div>
 
-                                  h2 {
-                                          font-size: 2.2rem;
-                                                color: var(--primary);
-                                                      font-weight: 700;
-                                                            text-align: center;
-                                                                  margin-bottom: 0.5rem;
-                                  }
+        <!-- Diskon Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div>
+            <label for="diskon" class="block text-xs font-semibold text-slate-700 mb-1">
+              Diskon Persentase (%)
+            </label>
+            <div class="relative">
+              <input type="number" id="diskon" min="0" max="100" step="any" placeholder="0" class="w-full text-sm pl-3 pr-8 py-2.5 rounded-xl border border-slate-300 bg-white/90 input-focus-ring transition">
+              <span class="absolute right-3 top-2.5 text-xs font-bold text-slate-400">%</span>
+            </div>
+          </div>
 
-                                      label {
-                                              font-weight: 600;
-                                                    font-size: 0.95rem;
-                                                          display: block;
-                                                                margin-bottom: 0.3rem;
-                                      }
+          <div>
+            <label for="maxDiskonNominal" class="block text-xs font-semibold text-slate-700 mb-1">
+              Maks. Diskon % (Rp)
+            </label>
+            <input type="number" id="maxDiskonNominal" min="0" placeholder="Opsional (tanpa batas)" class="w-full text-sm px-3 py-2.5 rounded-xl border border-slate-300 bg-white/90 input-focus-ring transition">
+          </div>
+        </div>
 
-                                          input,
-                                              textarea {
-                                                      padding: 0.75rem;
-                                                            border-radius: 0.75rem;
-                                                                  border: 1px solid #d1d5db;
-                                                                        font-size: 1rem;
-                                                                              background-color: #f9fafb;
-                                                                                    width: 100%;
-                                                                                          font-family: inherit;
-                                              }
+        <!-- Extra Discounts & Fees Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label for="diskonTambahanNominal" class="block text-xs font-semibold text-slate-700 mb-1">
+              Diskon Flat / Voucher (Rp)
+            </label>
+            <input type="number" id="diskonTambahanNominal" min="0" placeholder="Contoh: 10000" class="w-full text-sm px-3 py-2.5 rounded-xl border border-slate-300 bg-white/90 input-focus-ring transition">
+          </div>
 
-                                                  input:focus,
-                                                      textarea:focus {
-                                                              outline: 2px solid var(--primary);
-                                                                    background-color: #fff;
-                                                      }
+          <div>
+            <label for="biayaTambahan" class="block text-xs font-semibold text-slate-700 mb-1">
+              Biaya Extra (Ongkir/Pajak)
+            </label>
+            <input type="number" id="biayaTambahan" min="0" placeholder="Contoh: 15000" class="w-full text-sm px-3 py-2.5 rounded-xl border border-slate-300 bg-white/90 input-focus-ring transition">
+          </div>
+        </div>
 
-                                                          button {
-                                                                  background: linear-gradient(to right, var(--primary), var(--secondary));
-                                                                        color: white;
-                                                                              padding: 0.85rem;
-                                                                                    font-size: 1rem;
-                                                                                          border: none;
-                                                                                                border-radius: 0.75rem;
-                                                                                                      cursor: pointer;
-                                                                                                            font-weight: 600;
-                                                                                                                  transition: transform 0.2s ease, opacity 0.2s ease;
-                                                                                                                        width: 100%;
-                                                                                                                              margin-top: 0.5rem;
-                                                          }
+        <!-- Action Buttons -->
+        <div class="pt-2 flex gap-2">
+          <button type="button" onclick="hitungSplitBill()" class="flex-1 bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-brand-500/30 hover:shadow-brand-500/50 active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+            </svg>
+            Hitung Split Bill
+          </button>
+          
+          <button type="button" id="btnReset" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-semibold p-3 rounded-xl transition-colors" title="Bersihkan Form">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+          </button>
+        </div>
 
-                                                              button:hover {
-                                                                      transform: translateY(-2px);
-                                                                            opacity: 0.95;
-                                                              }
+      </form>
+    </section>
 
-                                                                  #result {
-                                                                          display: none;
-                                                                                margin-top: 1.5rem;
-                                                                                      background: #f8fafc;
-                                                                                            border: 1px solid #e2e8f0;
-                                                                                                  border-left: 5px solid var(--primary);
-                                                                                                        padding: 1.25rem;
-                                                                                                              border-radius: 0.75rem;
-                                                                  }
+    <!-- RIGHT PANEL: Display Output -->
+    <section class="lg:col-span-6 space-y-4">
+      
+      <!-- Error Message Banner -->
+      <div id="errorBanner" class="hidden glass-card border-rose-300 bg-rose-50/90 text-rose-800 p-4 rounded-2xl shadow-sm text-sm font-medium flex items-start gap-3 animate-fade-in">
+        <svg class="w-5 h-5 text-rose-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <div id="errorText" class="flex-1"></div>
+      </div>
 
-                                                                      #result.active {
-                                                                              display: block;
-                                                                      }
+      <!-- Empty Placeholder State -->
+      <div id="placeholderState" class="glass-card rounded-3xl p-8 text-center text-slate-500 shadow-xl shadow-purple-900/5 min-h-[380px] flex flex-col justify-center items-center">
+        <div class="w-16 h-16 rounded-2xl bg-brand-100 text-brand-600 flex items-center justify-center mb-4 shadow-inner">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path>
+          </svg>
+        </div>
+        <h3 class="text-base font-bold text-slate-800 mb-1">Hasil Perhitungan Akurat</h3>
+        <p class="text-xs sm:text-sm text-slate-500 max-w-xs">
+          Masukkan daftar nama dan harga menu di sebelah kiri, lalu klik <strong>Hitung Split Bill</strong>.
+        </p>
+      </div>
 
-                                                                          #result.error {
-                                                                                  border-left-color: var(--error-color);
-                                                                                        background-color: var(--error-bg);
-                                                                                              color: var(--error-color);
-                                                                                                    font-weight: 600;
-                                                                          }
+      <!-- Result Card Container -->
+      <div id="resultContainer" class="hidden space-y-4">
+        
+        <!-- Summary Dashboard Card -->
+        <div class="glass-card rounded-3xl p-5 sm:p-6 shadow-xl shadow-purple-900/5 border-l-4 border-l-brand-600">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2z"></path>
+              </svg>
+              Ringkasan Pembayaran
+            </h3>
+            <span class="text-xs font-semibold px-2.5 py-1 bg-brand-100 text-brand-800 rounded-full" id="totalPersonBadge">0 Orang</span>
+          </div>
 
-                                                                              .result-section {
-                                                                                      margin-bottom: 1rem;
-                                                                              }
+          <div class="space-y-2 text-xs sm:text-sm">
+            <div class="flex justify-between text-slate-600">
+              <span>Total Harga Menu</span>
+              <span class="font-semibold text-slate-900" id="resTotalMenu">Rp 0</span>
+            </div>
 
-                                                                                  .result-section:last-child {
-                                                                                          margin-bottom: 0;
-                                                                                  }
+            <div id="rowDiskonPersen" class="flex justify-between text-emerald-600 hidden">
+              <span id="labelDiskonPersen">Diskon Persentase</span>
+              <span class="font-semibold" id="resDiskonPersen">- Rp 0</span>
+            </div>
 
-                                                                                      .result-title {
-                                                                                              font-weight: 700;
-                                                                                                    font-size: 1.05rem;
-                                                                                                          margin-bottom: 0.5rem;
-                                                                                                                color: var(--primary);
-                                                                                                                      border-bottom: 1px solid #e2e8f0;
-                                                                                                                            padding-bottom: 0.25rem;
-                                                                                      }
+            <div id="rowDiskonTambahan" class="flex justify-between text-emerald-600 hidden">
+              <span>Diskon Flat / Voucher</span>
+              <span class="font-semibold" id="resDiskonTambahan">- Rp 0</span>
+            </div>
 
-                                                                                          .result-row {
-                                                                                                  display: flex;
-                                                                                                        justify-content: space-between;
-                                                                                                              padding: 0.3rem 0;
-                                                                                                                    font-size: 0.95rem;
-                                                                                          }
+            <div id="rowBiayaExtra" class="flex justify-between text-amber-600 hidden">
+              <span>Biaya Extra (Ongkir/Pajak)</span>
+              <span class="font-semibold" id="resBiayaExtra">+ Rp 0</span>
+            </div>
 
-                                                                                              .result-row.total {
-                                                                                                      font-weight: 700;
-                                                                                                            border-top: 1px dashed #cbd5e1;
-                                                                                                                  margin-top: 0.5rem;
-                                                                                                                        padding-top: 0.5rem;
-                                                                                                                              font-size: 1.05rem;
-                                                                                              }
-                                                                                                </style>
-                                                                                                </head>
+            <div class="pt-3 border-t border-slate-200 flex justify-between items-center">
+              <span class="font-bold text-slate-900 text-sm sm:text-base">Total Bayar Akhir</span>
+              <span class="font-extrabold text-brand-700 text-lg sm:text-xl" id="resTotalFinal">Rp 0</span>
+            </div>
+          </div>
+        </div>
 
-                                                                                                <body>
-                                                                                                  <div class="card">
-                                                                                                      <div class="form-section">
-                                                                                                            <h2>💸 Split Bill per Orang</h2>
+        <!-- Breakdown Per Person List -->
+        <div class="glass-card rounded-3xl p-5 sm:p-6 shadow-xl shadow-purple-900/5">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <svg class="w-5 h-5 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              Rincian Tagihan per Orang
+            </h3>
+          </div>
 
-                                                                                                                  <div>
-                                                                                                                          <label for="menuPerOrang">Harga Menu per Orang (Nama=harga, satu per baris):</label>
-                                                                                                                                  <textarea id="menuPerOrang" rows="5" placeholder="Contoh:&#10;Yunus=50000&#10;Sciros=60000"></textarea>
-                                                                                                                                        </div>
+          <div id="personList" class="space-y-3 max-h-[320px] overflow-y-auto pr-1 custom-scrollbar">
+            <!-- Dynamic Person Cards Inserted Here -->
+          </div>
 
-                                                                                                                                              <div>
-                                                                                                                                                      <label for="diskon">Diskon Persentase (%)</label>
-                                                                                                                                                              <input type="number" id="diskon" min="0" max="100" placeholder="Contoh: 10 (Opsional)">
-                                                                                                                                                                    </div>
+          <!-- Copy Button -->
+          <div class="pt-4 mt-4 border-t border-slate-200">
+            <button type="button" id="btnCopy" onclick="copyWhatsAppFormat()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-emerald-600/20 transition-all flex items-center justify-center gap-2 text-sm">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+              </svg>
+              <span>Salin Ringkasan untuk WhatsApp</span>
+            </button>
+          </div>
+        </div>
 
-                                                                                                                                                                          <div>
-                                                                                                                                                                                  <label for="maxDiskonNominal">Maksimal Diskon Persentase (Rp)</label>
-                                                                                                                                                                                          <input type="number" id="maxDiskonNominal" min="0" placeholder="Contoh: 50000 (Opsional)">
-                                                                                                                                                                                                </div>
+      </div>
+    </section>
 
-                                                                                                                                                                                                      <div>
-                                                                                                                                                                                                              <label for="diskonTambahanNominal">Diskon Tambahan (Rp)</label>
-                                                                                                                                                                                                                      <input type="number" id="diskonTambahanNominal" min="0" placeholder="Contoh: 15000 (Opsional)">
-                                                                                                                                                                                                                            </div>
+  </main>
 
-                                                                                                                                                                                                                                  <div>
-                                                                                                                                                                                                                                          <label for="biayaTambahan">Biaya Tambahan (Ongkir, Pajak, dll.) (Rp)</label>
-                                                                                                                                                                                                                                                  <input type="number" id="biayaTambahan" min="0" placeholder="Contoh: 20000 (Opsional)">
-                                                                                                                                                                                                                                                        </div>
+  <!-- Footer -->
+  <footer class="max-w-4xl mx-auto w-full text-center text-xs text-slate-500 mt-8 mb-2">
+    Split Bill Modern &copy; <span id="year"></span> • Dibuat secara rapi & intuitif
+  </footer>
 
-                                                                                                                                                                                                                                                              <button id="btnHitung">Hitung Split Bill</button>
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 transform translate-y-20 opacity-0 bg-slate-900 text-white text-xs font-semibold px-4 py-3 rounded-xl shadow-2xl transition-all duration-300 flex items-center gap-2 border border-slate-700">
+    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+    </svg>
+    <span id="toastMsg">Teks berhasil disalin!</span>
+  </div>
 
-                                                                                                                                                                                                                                                                    <div id="result"></div>
-                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                          </div>
+  <!-- JavaScript Logic -->
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
 
-                                                                                                                                                                                                                                                                            <script>
-                                                                                                                                                                                                                                                                                function formatRupiah(angka) {
-                                                                                                                                                                                                                                                                                          return Math.round(angka).toLocaleString('id-ID');
-                                                                                                                                                                                                                                                                                }
+    // Cache Global State for WhatsApp Copying
+    let lastCalculatedData = null;
 
-                                                                                                                                                                                                                                                                                    document.getElementById('btnHitung').addEventListener('click', function () {
-                                                                                                                                                                                                                                                                                              const resultDiv = document.getElementById('result');
-                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                          const menuText = document.getElementById('menuPerOrang').value.trim();
-                                                                                                                                                                                                                                                                                                                const diskonPersenInput = parseFloat(document.getElementById('diskon').value);
-                                                                                                                                                                                                                                                                                                                      const maxDiskonNominalInput = parseFloat(document.getElementById('maxDiskonNominal').value);
-                                                                                                                                                                                                                                                                                                                            const diskonTambahanNominalInput = parseFloat(document.getElementById('diskonTambahanNominal').value);
-                                                                                                                                                                                                                                                                                                                                  const biayaTambahanInput = parseFloat(document.getElementById('biayaTambahan').value);
-                                                                                                                                                                                                                                                                                                                                  
-                                                                                                                                                                                                                                                                                                                                        const diskonPersen = isNaN(diskonPersenInput) || diskonPersenInput < 0 ? 0 : diskonPersenInput;
-                                                                                                                                                                                                                                                                                                                                              const maxDiskonNominal = isNaN(maxDiskonNominalInput) || maxDiskonNominalInput < 0 ? Infinity : maxDiskonNominalInput;
-                                                                                                                                                                                                                                                                                                                                                    const diskonTambahan = isNaN(diskonTambahanNominalInput) || diskonTambahanNominalInput < 0 ? 0 : diskonTambahanNominalInput;
-                                                                                                                                                                                                                                                                                                                                                          const biayaTambahan = isNaN(biayaTambahanInput) || biayaTambahanInput < 0 ? 0 : biayaTambahanInput;
-                                                                                                                                                                                                                                                                                                                                                          
-                                                                                                                                                                                                                                                                                                                                                                if (!menuText) {
-                                                                                                                                                                                                                                                                                                                                                                            showError("❗ Harap isi daftar harga menu per orang.");
-                                                                                                                                                                                                                                                                                                                                                                                    return;
-                                                                                                                                                                                                                                                                                                                                                                                          }
-                                                                                                                                                                                                                                                                                                                                                                                          
-                                                                                                                                                                                                                                                                                                                                                                                                // Filter baris kosong agar spasi/enter ekstra di akhir tidak menyebabkan error
-                                                                                                                                                                                                                                                                                                                                                                                                      const baris = menuText.split('\n').map(b => b.trim()).filter(b => b !== '');
-                                                                                                                                                                                                                                                                                                                                                                                                            let totalSebelumDiskon = 0;
-                                                                                                                                                                                                                                                                                                                                                                                                                  const orang = [];
-                                                                                                                                                                                                                                                                                                                                                                                                                  
-                                                                                                                                                                                                                                                                                                                                                                                                                        for (const b of baris) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                    const parts = b.split('=');
-                                                                                                                                                                                                                                                                                                                                                                                                                                            if (parts.length < 2) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                          showError(`❗ Format salah pada baris: "${b}". Gunakan format Nama=harga`);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                    return;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    const nama = parts[0].trim();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            const hargaStr = parts.slice(1).join('=').trim();
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    const harga = parseFloat(hargaStr);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            if (!nama || isNaN(harga)) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          showError(`❗ Format salah pada baris: "${b}". Harga harus berupa angka.`);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    return;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    if (harga < 0) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  showError(`❗ Harga tidak boleh negatif pada baris: "${b}"`);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            return;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            orang.push({ nama, harga });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    totalSebelumDiskon += harga;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                // --- Perhitungan ---
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      const diskonBerdasarkanPersen = totalSebelumDiskon * (diskonPersen / 100);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            const diskonPersenYangDiaplikasikan = Math.min(diskonBerdasarkanPersen, maxDiskonNominal);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  const totalSetelahDiskonPersen = totalSebelumDiskon - diskonPersenYangDiaplikasikan;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        const totalSetelahSemuaDiskon = Math.max(0, totalSetelahDiskonPersen - diskonTambahan);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              const totalFinal = totalSetelahSemuaDiskon + biayaTambahan;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    // --- Output Render HTML ---
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          resultDiv.className = 'active';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      let html = `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <div class="result-section">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <div class="result-title">📋 Ringkasan Bill</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <div class="result-row"><span>Total Harga Menu:</span> <span>Rp ${formatRupiah(totalSebelumDiskon)}</span></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        `;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              if (diskonPersen > 0 || maxDiskonNominal !== Infinity) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        const infoMax = maxDiskonNominal !== Infinity ? `, maks Rp ${formatRupiah(maxDiskonNominal)}` : '';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                html += `<div class="result-row"><span>Diskon (${diskonPersen}%${infoMax}):</span> <span>- Rp ${formatRupiah(diskonPersenYangDiaplikasikan)}</span></div>`;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            if (diskonTambahan > 0) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        html += `<div class="result-row"><span>Diskon Tambahan:</span> <span>- Rp ${formatRupiah(diskonTambahan)}</span></div>`;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    if (biayaTambahan > 0) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                html += `<div class="result-row"><span>Biaya Tambahan:</span> <span>+ Rp ${formatRupiah(biayaTambahan)}</span></div>`;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            html += `
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="result-row total"><span>Total Akhir Pembayaran:</span> <span>Rp ${formatRupiah(totalFinal)}</span></div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <div class="result-section">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              <div class="result-title">💰 Tagihan per Orang</div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          if (totalSebelumDiskon <= 0) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    const biayaPerOrang = orang.length > 0 ? totalFinal / orang.length : 0;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            orang.forEach(o => {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          html += `<div class="result-row"><span>${o.nama}</span> <span>Rp ${formatRupiah(biayaPerOrang)}</span></div>`;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        } else {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    orang.forEach(o => {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  const porsi = o.harga / totalSebelumDiskon;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            const bayar = totalFinal * porsi;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      html += `<div class="result-row"><span>${o.nama} (Awal: Rp ${formatRupiah(o.harga)})</span> <span><strong>Rp ${formatRupiah(bayar)}</strong></span></div>`;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          html += `</div>`;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                resultDiv.innerHTML = html;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      function showError(msg) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                resultDiv.className = 'active error';
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        resultDiv.innerText = msg;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  });
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </script>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </body>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
-              }
+    // Helper: Format to Indonesian Rupiah
+    function formatRupiah(num) {
+      return Math.round(num).toLocaleString('id-ID');
+    }
+
+    // Helper: Show Error Banner
+    function showError(message) {
+      const banner = document.getElementById('errorBanner');
+      const textNode = document.getElementById('errorText');
+      const placeholder = document.getElementById('placeholderState');
+      const resultContainer = document.getElementById('resultContainer');
+
+      textNode.innerText = message;
+      banner.classList.remove('hidden');
+      resultContainer.classList.add('hidden');
+      placeholder.classList.remove('hidden');
+    }
+
+    // Helper: Hide Error Banner
+    function hideError() {
+      document.getElementById('errorBanner').classList.add('hidden');
+    }
+
+    // Helper: Show Toast
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.innerText = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    // Load Sample Data
+    document.getElementById('btnContoh').addEventListener('click', function () {
+      document.getElementById('menuPerOrang').value = `Yunus=50000\nSciros=60000\nBudi=40000\nSiti=30000`;
+      document.getElementById('diskon').value = 15;
+      document.getElementById('maxDiskonNominal').value = 25000;
+      document.getElementById('diskonTambahanNominal').value = 5000;
+      document.getElementById('biayaTambahan').value = 12000;
+      hitungSplitBill();
+    });
+
+    // Reset Form
+    document.getElementById('btnReset').addEventListener('click', function () {
+      document.getElementById('splitForm').reset();
+      document.getElementById('menuPerOrang').value = '';
+      hideError();
+      document.getElementById('resultContainer').classList.add('hidden');
+      document.getElementById('placeholderState').classList.remove('hidden');
+      lastCalculatedData = null;
+    });
+
+    // Core Split Bill Calculation Logic
+    function hitungSplitBill() {
+      hideError();
+
+      const rawMenuText = document.getElementById('menuPerOrang').value.trim();
+      const diskonPersenInput = parseFloat(document.getElementById('diskon').value);
+      const maxDiskonNominalInput = parseFloat(document.getElementById('maxDiskonNominal').value);
+      const diskonTambahanInput = parseFloat(document.getElementById('diskonTambahanNominal').value);
+      const biayaTambahanInput = parseFloat(document.getElementById('biayaTambahan').value);
+
+      // Default value fallbacks
+      const diskonPersen = isNaN(diskonPersenInput) || diskonPersenInput < 0 ? 0 : diskonPersenInput;
+      const maxDiskonNominal = isNaN(maxDiskonNominalInput) || maxDiskonNominalInput < 0 ? Infinity : maxDiskonNominalInput;
+      const diskonTambahan = isNaN(diskonTambahanInput) || diskonTambahanInput < 0 ? 0 : diskonTambahanInput;
+      const biayaTambahan = isNaN(biayaTambahanInput) || biayaTambahanInput < 0 ? 0 : biayaTambahanInput;
+
+      if (!rawMenuText) {
+        showError("Harap isi daftar harga menu per orang terlebih dahulu.");
+        return;
+      }
+
+      // Parse lines cleanly filtering out trailing blank lines
+      const lines = rawMenuText.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      let totalSebelumDiskon = 0;
+      const orangList = [];
+
+      for (let index = 0; index < lines.length; index++) {
+        const line = lines[index];
+        const parts = line.split('=');
+
+        if (parts.length < 2) {
+          showError(`Format salah pada baris ke-${index + 1}: "${line}". Gunakan format Nama=harga (Contoh: Andi=50000)`);
+          return;
+        }
+
+        const nama = parts[0].trim();
+        const hargaStr = parts.slice(1).join('=').trim();
+        const harga = parseFloat(hargaStr);
+
+        if (!nama) {
+          showError(`Nama tidak boleh kosong pada baris ke-${index + 1}: "${line}"`);
+          return;
+        }
+
+        if (isNaN(harga)) {
+          showError(`Harga harus berupa angka valid pada baris ke-${index + 1}: "${line}"`);
+          return;
+        }
+
+        if (harga < 0) {
+          showError(`Harga tidak boleh bernilai negatif pada baris ke-${index + 1}: "${line}"`);
+          return;
+        }
+
+        orangList.push({ nama, harga });
+        totalSebelumDiskon += harga;
+      }
+
+      if (orangList.length === 0) {
+        showError("Daftar pesanan tidak valid.");
+        return;
+      }
+
+      // 1. Percentage discount calculation
+      const diskonPersenCalc = totalSebelumDiskon * (diskonPersen / 100);
+      const diskonPersenDiaplikasikan = Math.min(diskonPersenCalc, maxDiskonNominal);
+
+      // 2. Net calculation after percentage discount
+      const totalSetelahDiskonPersen = totalSebelumDiskon - diskonPersenDiaplikasikan;
+
+      // 3. Flat discount calculation
+      const totalSetelahSemuaDiskon = Math.max(0, totalSetelahDiskonPersen - diskonTambahan);
+
+      // 4. Final total with extra charges (Ongkir/Pajak)
+      const totalFinal = totalSetelahSemuaDiskon + biayaTambahan;
+
+      // 5. Individual proportional shares
+      const rincianOrang = orangList.map(o => {
+        let bayar = 0;
+        let porsiPersen = 0;
+        
+        if (totalSebelumDiskon > 0) {
+          porsiPersen = (o.harga / totalSebelumDiskon);
+          bayar = totalFinal * porsiPersen;
+        } else {
+          // If total menu is 0, split final total equally
+          porsiPersen = 1 / orangList.length;
+          bayar = totalFinal / orangList.length;
+        }
+
+        return {
+          nama: o.nama,
+          hargaAwal: o.harga,
+          bayarAkhir: bayar,
+          persenPorsi: (porsiPersen * 100).toFixed(1)
+        };
+      });
+
+      // Save calculation result in memory for WhatsApp export
+      lastCalculatedData = {
+        totalSebelumDiskon,
+        diskonPersen,
+        maxDiskonNominal,
+        diskonPersenDiaplikasikan,
+        diskonTambahan,
+        biayaTambahan,
+        totalFinal,
+        rincianOrang
+      };
+
+      // --- RENDER UI ---
+      document.getElementById('placeholderState').classList.add('hidden');
+      document.getElementById('resultContainer').classList.remove('hidden');
+
+      document.getElementById('totalPersonBadge').innerText = `${orangList.length} Orang`;
+      document.getElementById('resTotalMenu').innerText = `Rp ${formatRupiah(totalSebelumDiskon)}`;
+
+      // Toggle & Render Percentage Discount Row
+      const rowPersen = document.getElementById('rowDiskonPersen');
+      if (diskonPersen > 0 || maxDiskonNominal !== Infinity) {
+        rowPersen.classList.remove('hidden');
+        const capText = maxDiskonNominal !== Infinity ? ` (Maks Rp ${formatRupiah(maxDiskonNominal)})` : '';
+        document.getElementById('labelDiskonPersen').innerText = `Diskon ${diskonPersen}%${capText}`;
+        document.getElementById('resDiskonPersen').innerText = `- Rp ${formatRupiah(diskonPersenDiaplikasikan)}`;
+      } else {
+        rowPersen.classList.add('hidden');
+      }
+
+      // Toggle & Render Flat Discount Row
+      const rowTambahan = document.getElementById('rowDiskonTambahan');
+      if (diskonTambahan > 0) {
+        rowTambahan.classList.remove('hidden');
+        document.getElementById('resDiskonTambahan').innerText = `- Rp ${formatRupiah(diskonTambahan)}`;
+      } else {
+        rowTambahan.classList.add('hidden');
+      }
+
+      // Toggle & Render Extra Fees Row
+      const rowExtra = document.getElementById('rowBiayaExtra');
+      if (biayaTambahan > 0) {
+        rowExtra.classList.remove('hidden');
+        document.getElementById('resBiayaExtra').innerText = `+ Rp ${formatRupiah(biayaTambahan)}`;
+      } else {
+        rowExtra.classList.add('hidden');
+      }
+
+      document.getElementById('resTotalFinal').innerText = `Rp ${formatRupiah(totalFinal)}`;
+
+      // Render Breakdown Cards per Person
+      const personContainer = document.getElementById('personList');
+      personContainer.innerHTML = '';
+
+      rincianOrang.forEach(o => {
+        const card = document.createElement('div');
+        card.className = "bg-white/90 p-3.5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between gap-3 hover:border-brand-300 transition-colors";
+        card.innerHTML = `
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2 mb-0.5">
+              <span class="font-bold text-slate-800 text-sm truncate">${escapeHtml(o.nama)}</span>
+              <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">${o.persenPorsi}%</span>
+            </div>
+            <div class="text-xs text-slate-500">
+              Pesanan: Rp ${formatRupiah(o.hargaAwal)}
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-xs text-slate-400 font-medium">Tagihan</div>
+            <div class="text-sm sm:text-base font-extrabold text-brand-700">Rp ${formatRupiah(o.bayarAkhir)}</div>
+          </div>
+        `;
+        personContainer.appendChild(card);
+      });
+    }
+
+    // Helper: Escaping HTML input strings
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.innerText = text;
+      return div.innerHTML;
+    }
+
+    // Copy formatted text for WhatsApp
+    function copyWhatsAppFormat() {
+      if (!lastCalculatedData) return;
+
+      const d = lastCalculatedData;
+      let text = `💸 *RINGKASAN SPLIT BILL* 💸\n`;
+      text += `-----------------------------------\n`;
+      text += `📋 Total Menu : Rp ${formatRupiah(d.totalSebelumDiskon)}\n`;
+      
+      if (d.diskonPersenDiaplikasikan > 0) {
+        text += `🎉 Diskon % : - Rp ${formatRupiah(d.diskonPersenDiaplikasikan)}\n`;
+      }
+      if (d.diskonTambahan > 0) {
+        text += `🏷️ Diskon Flat : - Rp ${formatRupiah(d.diskonTambahan)}\n`;
+      }
+      if (d.biayaTambahan > 0) {
+        text += `🚚 Biaya Extra : + Rp ${formatRupiah(d.biayaTambahan)}\n`;
+      }
+      
+      text += `💰 *TOTAL BAYAR : Rp ${formatRupiah(d.totalFinal)}*\n`;
+      text += `-----------------------------------\n`;
+      text += `👥 *TAGIHAN PER ORANG:*\n\n`;
+
+      d.rincianOrang.forEach((o, i) => {
+        text += `${i + 1}. *${o.nama}*\n`;
+        text += `   • Pesanan: Rp ${formatRupiah(o.hargaAwal)}\n`;
+        text += `   👉 *Bayar: Rp ${formatRupiah(o.bayarAkhir)}*\n\n`;
+      });
+
+      text += `-----------------------------------\n`;
+      text += `_Dihitung via Split Bill Modern ✨_`;
+
+      // Copy to Clipboard fallback logic
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text)
+          .then(() => showToast("Ringkasan WhatsApp berhasil disalin!"))
+          .catch(() => copyFallback(text));
+      } else {
+        copyFallback(text);
+      }
+    }
+
+    function copyFallback(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast("Ringkasan WhatsApp berhasil disalin!");
+      } catch (err) {
+        showError("Gagal menyalin otomatis. Silakan salin manual.");
+      }
+      document.body.removeChild(textArea);
+    }
+  </script>
+</body>
+</html>
