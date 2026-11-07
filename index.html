@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Split Bill Modern</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+          <style>
+              :root {
+                      --primary: #7e22ce;
+                            --secondary: #9333ea;
+                                  --bg-gradient: linear-gradient(135deg, #f5d0fe, #c084fc);
+                                        --text-color: #1e1b4b;
+                                              --white: #ffffff;
+                                                    --card-bg: rgba(255, 255, 255, 0.95);
+              }
+
+                  * {
+                          box-sizing: border-box;
+                                margin: 0;
+                                      padding: 0;
+                  }
+
+                      body {
+                              font-family: 'Inter', sans-serif;
+                                    background: var(--bg-gradient);
+                                          color: var(--text-color);
+                                                display: flex;
+                                                      justify-content: center;
+                                                            align-items: center;
+                                                                  min-height: 100vh;
+                                                                        padding: 2rem;
+                      }
+
+                          .card {
+                                  background: var(--card-bg);
+                                        border-radius: 1.5rem;
+                                              padding: 2.5rem;
+                                                    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+                                                          max-width: 600px;
+                                                                width: 100%;
+                          }
+
+                              .form-section {
+                                      display: flex;
+                                            flex-direction: column;
+                                                  gap: 1rem;
+                              }
+
+                                  h2 {
+                                          font-size: 2.2rem;
+                                                color: var(--primary);
+                                                      font-weight: 700;
+                                                            text-align: center;
+                                                                  margin-bottom: 1.5rem;
+                                  }
+
+                                      label {
+                                              font-weight: 600;
+                                                    margin-top: 0.5rem;
+                                                          display: block;
+                                                                /* Ensure label takes full width */
+                                      }
+
+                                          input,
+                                              textarea {
+                                                      padding: 0.75rem;
+                                                            border-radius: 0.75rem;
+                                                                  border: 1px solid #d1d5db;
+                                                                        font-size: 1rem;
+                                                                              background-color: #f9fafb;
+                                                                                    width: 100%;
+                                                                                          /* Make inputs take full width */
+                                              }
+
+                                                  button {
+                                                          background: linear-gradient(to right, var(--primary), var(--secondary));
+                                                                color: white;
+                                                                      padding: 0.8rem;
+                                                                            font-size: 1rem;
+                                                                                  border: none;
+                                                                                        border-radius: 0.75rem;
+                                                                                              cursor: pointer;
+                                                                                                    font-weight: 600;
+                                                                                                          transition: transform 0.2s ease;
+                                                                                                                width: 100%;
+                                                                                                                      /* Make button take full width */
+                                                                                                                            margin-top: 1rem;
+                                                                                                                                  /* Add some space above button */
+                                                  }
+
+                                                      button:hover {
+                                                              transform: scale(1.03);
+                                                      }
+
+                                                          #result {
+                                                                  margin-top: 1.5rem;
+                                                                        /* Increased margin */
+                                                                              background: #f3f4f6;
+                                                                                    border-left: 4px solid var(--primary);
+                                                                                          padding: 1.2rem;
+                                                                                                /* Increased padding */
+                                                                                                      border-radius: 0.5rem;
+                                                                                                            white-space: pre-line;
+                                                                                                                  line-height: 1.6;
+                                                                                                                        /* Improve readability */
+                                                          }
+                                                            </style>
+                                                            </head>
+
+                                                            <body>
+                                                              <div class="card">
+                                                                  <div class="form-section">
+                                                                        <h2>💸 Split Bill per Orang</h2>
+
+                                                                              <label for="menuPerOrang">Harga Menu per Orang (format: Nama=harga, satu per baris):</label>
+                                                                                    <textarea id="menuPerOrang" rows="5" placeholder="Contoh:
+                                                                                    Yunus=50000
+                                                                                    Sciros=60000"></textarea>
+
+                                                                                          <label for="diskon">Diskon Persentase (%)</label>
+                                                                                                <input type="number" id="diskon" placeholder="Contoh: 10">
+
+                                                                                                      <label for="maxDiskonNominal">Maksimal Diskon Persentase (Rp)</label>
+                                                                                                            <input type="number" id="maxDiskonNominal" placeholder="Contoh: 50000 (Opsional)">
+
+                                                                                                                  <label for="diskonTambahanNominal">Diskon Tambahan (Rp)</label>
+                                                                                                                        <input type="number" id="diskonTambahanNominal" placeholder="Contoh: 15000 (Opsional)">
+
+                                                                                                                              <label for="biayaTambahan">Biaya Tambahan (Ongkir, Pajak, dll.) (Rp)</label>
+                                                                                                                                    <input type="number" id="biayaTambahan" placeholder="Contoh: 20000 (Opsional)">
+
+                                                                                                                                          <button onclick="hitungSplitBill()">Hitung</button>
+
+                                                                                                                                                <div id="result"></div>
+                                                                                                                                                    </div>
+                                                                                                                                                      </div>
+
+                                                                                                                                                        <script>
+                                                                                                                                                            function formatRupiah(angka) {
+                                                                                                                                                                      // Use Math.round to handle potential floating point issues before formatting
+                                                                                                                                                                            const roundedAngka = Math.round(angka);
+                                                                                                                                                                                  return roundedAngka.toLocaleString('id-ID');
+                                                                                                                                                            }
+
+                                                                                                                                                                function hitungSplitBill() {
+                                                                                                                                                                          const menuText = document.getElementById('menuPerOrang').value.trim();
+                                                                                                                                                                                const diskonPersenInput = parseFloat(document.getElementById('diskon').value);
+                                                                                                                                                                                      const maxDiskonNominalInput = parseFloat(document.getElementById('maxDiskonNominal').value);
+                                                                                                                                                                                            const diskonTambahanNominalInput = parseFloat(document.getElementById('diskonTambahanNominal').value);
+                                                                                                                                                                                                  const biayaTambahanInput = parseFloat(document.getElementById('biayaTambahan').value);
+
+                                                                                                                                                                                                        // Default values if inputs are empty or invalid
+                                                                                                                                                                                                              const diskonPersen = isNaN(diskonPersenInput) ? 0 : diskonPersenInput;
+                                                                                                                                                                                                                    const maxDiskonNominal = isNaN(maxDiskonNominalInput) || maxDiskonNominalInput < 0 ? Infinity : maxDiskonNominalInput; // Use Infinity if no valid max discount is set
+                                                                                                                                                                                                                          const diskonTambahan = isNaN(diskonTambahanNominalInput) || diskonTambahanNominalInput < 0 ? 0 : diskonTambahanNominalInput;
+                                                                                                                                                                                                                                const biayaTambahan = isNaN(biayaTambahanInput) || biayaTambahanInput < 0 ? 0 : biayaTambahanInput;
+
+
+                                                                                                                                                                                                                                      if (!menuText) {
+                                                                                                                                                                                                                                                document.getElementById('result').innerText = "❗ Harap isi daftar harga menu per orang.";
+                                                                                                                                                                                                                                                        return;
+                                                                                                                                                                                                                                      }
+
+                                                                                                                                                                                                                                            const baris = menuText.split('\n');
+                                                                                                                                                                                                                                                  let totalSebelumDiskon = 0;
+                                                                                                                                                                                                                                                        let orang = [];
+
+                                                                                                                                                                                                                                                              for (const b of baris) {
+                                                                                                                                                                                                                                                                        const parts = b.split('=');
+                                                                                                                                                                                                                                                                                if (parts.length < 2) {
+                                                                                                                                                                                                                                                                                                 document.getElementById('result').innerText = `❗ Format salah pada baris: ${b}. Gunakan format Nama=harga`;
+                                                                                                                                                                                                                                                                                                              return;
+                                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                                        const nama = parts[0].trim();
+                                                                                                                                                                                                                                                                                                const hargaStr = parts.slice(1).join('=').trim();
+                                                                                                                                                                                                                                                                                                        const harga = parseFloat(hargaStr);
+
+                                                                                                                                                                                                                                                                                                                if (!nama || isNaN(harga)) {
+                                                                                                                                                                                                                                                                                                                               document.getElementById('result').innerText = `❗ Format salah pada baris: ${b}. Harga harus berupa angka.`;
+                                                                                                                                                                                                                                                                                                                                          return;
+                                                                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                                                                                                        if (harga < 0) {
+                                                                                                                                                                                                                                                                                                                                         document.getElementById('result').innerText = `❗ Harga tidak boleh negatif pada baris: ${b}`;
+                                                                                                                                                                                                                                                                                                                                                      return;
+                                                                                                                                                                                                                                                                                                                        }
+
+                                                                                                                                                                                                                                                                                                                                orang.push({ nama: nama, harga });
+                                                                                                                                                                                                                                                                                                                                        totalSebelumDiskon += harga;
+                                                                                                                                                                                                                                                              }
+
+                                                                                                                                                                                                                                                                    // --- Calculation Flow ---
+                                                                                                                                                                                                                                                                          // 1. Calculate potential percentage discount
+                                                                                                                                                                                                                                                                                const diskonBerdasarkanPersen = totalSebelumDiskon * (diskonPersen / 100);
+
+                                                                                                                                                                                                                                                                                      // 2. Apply the maximum percentage discount limit
+                                                                                                                                                                                                                                                                                            const diskonPersenYangDiaplikasikan = Math.min(diskonBerdasarkanPersen, maxDiskonNominal);
+
+                                                                                                                                                                                                                                                                                                  // 3. Calculate total after percentage discount
+                                                                                                                                                                                                                                                                                                        const totalSetelahDiskonPersen = totalSebelumDiskon - diskonPersenYangDiaplikasikan;
+
+                                                                                                                                                                                                                                                                                                              // 4. Apply the additional nominal discount
+                                                                                                                                                                                                                                                                                                                    // Ensure total doesn't go below zero after this discount
+                                                                                                                                                                                                                                                                                                                          const totalSetelahSemuaDiskon = Math.max(0, totalSetelahDiskonPersen - diskonTambahan);
+
+
+                                                                                                                                                                                                                                                                                                                                // 5. Add additional costs
+                                                                                                                                                                                                                                                                                                                                      const totalFinal = totalSetelahSemuaDiskon + biayaTambahan;
+
+                                                                                                                                                                                                                                                                                                                                            // --- Display Results ---
+                                                                                                                                                                                                                                                                                                                                                  let hasil = `📋 Ringkasan:\n`;
+                                                                                                                                                                                                                                                                                                                                                        hasil += `Total Harga Menu: Rp ${formatRupiah(totalSebelumDiskon)}\n`;
+                                                                                                                                                                                                                                                                                                                                                              if (diskonPersen > 0 || maxDiskonNominal !== Infinity) {
+                                                                                                                                                                                                                                                                                                                                                                         hasil += `Diskon Persentase (${diskonPersen}%${maxDiskonNominal === Infinity ? '' : `, maks Rp ${formatRupiah(maxDiskonNominal)}`}): - Rp ${formatRupiah(diskonPersenYangDiaplikasikan)}\n`;
+                                                                                                                                                                                                                                                                                                                                                              }
+                                                                                                                                                                                                                                                                                                                                                                    if (diskonTambahan > 0) {
+                                                                                                                                                                                                                                                                                                                                                                                 hasil += `Diskon Tambahan: - Rp ${formatRupiah(diskonTambahan)}\n`;
+                                                                                                                                                                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                                                                                                                                                                           if (biayaTambahan > 0) {
+                                                                                                                                                                                                                                                                                                                                                                                     hasil += `Biaya Tambahan: + Rp ${formatRupiah(biayaTambahan)}\n`;
+                                                                                                                                                                                                                                                                                                                                                                           }
+
+                                                                                                                                                                                                                                                                                                                                                                                 hasil += `Total Akhir yang Harus Dibayar: Rp ${formatRupiah(totalFinal)}\n\n`;
+
+                                                                                                                                                                                                                                                                                                                                                                                       hasil += `💰 Tagihan per Orang:\n`;
+                                                                                                                                                                                                                                                                                                                                                                                             if (totalSebelumDiskon <= 0) { // Handle total menu 0 or negative after discounts
+                                                                                                                                                                                                                                                                                                                                                                                                       if (orang.length > 0) {
+                                                                                                                                                                                                                                                                                                                                                                                                                       const biayaPerOrang = totalFinal / orang.length;
+                                                                                                                                                                                                                                                                                                                                                                                                                                      for (const o of orang) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                         hasil += `${o.nama}: Rp ${formatRupiah(biayaPerOrang)}\n`; // Split final total equally
+                                                                                                                                                                                                                                                                                                                                                                                                                                      }
+                                                                                                                                                                                                                                                                                                                                                                                                       } else {
+                                                                                                                                                                                                                                                                                                                                                                                                                       hasil += `Tidak ada orang dalam daftar menu.\n`;
+                                                                                                                                                                                                                                                                                                                                                                                                       }
+                                                                                                                                                                                                                                                                                                                                                                                             } else {
+                                                                                                                                                                                                                                                                                                                                                                                                          for (const o of orang) {
+                                                                                                                                                                                                                                                                                                                                                                                                                        // Calculate portion based on their menu price relative to the total *before* any discounts
+                                                                                                                                                                                                                                                                                                                                                                                                                                    const porsi = o.harga / totalSebelumDiskon;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                // Apply that portion to the final total (after all discounts and additional cost)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                            const bayar = totalFinal * porsi;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        hasil += `${o.nama}: Rp ${formatRupiah(bayar)}\n`;
+                                                                                                                                                                                                                                                                                                                                                                                                          }
+                                                                                                                                                                                                                                                                                                                                                                                             }
+
+
+                                                                                                                                                                                                                                                                                                                                                                                                   document.getElementById('result').innerText = hasil;
+                                                                                                                                                                }
+                                                                                                                                                                  </script>
+                                                                                                                                                                  </body>
+
+                                                                                                                                                                  </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                      }
+                                                                                                                                                                                                                                                                                }
+                                                                                                                                                                                                                                      }
+              }
